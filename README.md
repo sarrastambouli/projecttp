@@ -81,6 +81,10 @@ projecttp/
 └── README.md
 ```
 
+## 🎨 Captures d'écran
+
+## (projecttp\screenshots\cap1.png)
+## (projecttp\screenshots\cap2.png)
 
 ## 👨‍💻 Auteur
 
