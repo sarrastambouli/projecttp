@@ -1,0 +1,73 @@
+<div class="container">
+  <h2>Liste des suggestions</h2>
+
+  <!-- Barre de recherche -->
+  <div class="search-bar">
+    <input 
+      type="text" 
+      [(ngModel)]="searchText" 
+      placeholder="Rechercher une suggestion"
+      class="search-input"
+    />
+  </div>
+
+  <!-- Liste des suggestions -->
+  <div class="suggestions-list">
+    <div 
+      *ngFor="let suggestion of filteredSuggestions" 
+      class="suggestion-card"
+    >
+      <div class="suggestion-header">
+        <h3>{{ suggestion.title }}</h3>
+      </div>
+      
+      <div class="suggestion-info">
+        <span class="category-badge">{{ suggestion.category }}</span>
+        <span class="date">{{ suggestion.date | date:'dd MMM yyyy' }}</span>
+      </div>
+      
+      <p class="description">{{ suggestion.description }}</p>
+      
+      <div class="suggestion-footer">
+        <span 
+          class="status-badge"
+          [ngClass]="{
+            'status-acceptee': suggestion.status === 'acceptee',
+            'status-refusee': suggestion.status === 'refusee',
+            'status-attente': suggestion.status === 'en_attente'
+          }"
+        >
+          {{ suggestion.status === 'acceptee' ? 'ACCEPTÉE' : 
+             suggestion.status === 'refusee' ? 'REFUSÉE' : 
+             'EN ATTENTE' }}
+        </span>
+      </div>
+
+      <!-- Boutons Like et Favoris (toujours affichés) -->
+      <div class="actions">
+        <button 
+          class="btn btn-like" 
+          (click)="likeSuggestion(suggestion)"
+        >
+          👍 Like {{ suggestion.nbLikes }}
+        </button>
+        <button 
+          class="btn btn-favorite" 
+          (click)="addToFavorites(suggestion)"
+        >
+          ❤️ Ajouter aux favoris
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Affichage des favoris -->
+  <div *ngIf="favorites.length > 0" class="favorites-section">
+    <h3>Mes Favoris ({{ favorites.length }})</h3>
+    <ul>
+      <li *ngFor="let fav of favorites">
+        <strong>{{ fav.title }}</strong> - {{ fav.category }}
+      </li>
+    </ul>
+  </div>
+</div>
