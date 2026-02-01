@@ -1,27 +1,96 @@
-# Projecttp
+#  Système de Gestion des Suggestions - Campus Ideas
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.21.
+Application Angular pour gérer les suggestions d'amélioration dans un campus universitaire.
 
-## Development server
+##  Description
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Ce projet est un système de gestion des suggestions permettant aux utilisateurs de :
+- Consulter la liste des suggestions
+- Liker les suggestions
+- Ajouter des suggestions aux favoris
+- Filtrer les suggestions par titre ou catégorie
+- Visualiser le statut des suggestions (Acceptée, Refusée, En attente)
 
-## Code scaffolding
+##  Technologies utilisées
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- **Angular 18+** (Standalone Components)
+- **TypeScript**
+- **HTML5 / CSS3**
+- **FormsModule** pour le two-way binding
 
-## Build
+## Installation
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Prérequis
 
-## Running unit tests
+- Node.js (v18 ou supérieur)
+- npm ou yarn
+- Angular CLI
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Étapes d'installation
 
-## Running end-to-end tests
+1. Cloner le repository :
+```bash
+git clone https://github.com/sarrastambouli/projecttp.git
+cd projecttp
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+2. Installer les dépendances :
+```bash
+npm install
+```
 
-## Further help
+3. Lancer l'application :
+```bash
+npm start
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+4. Ouvrir dans le navigateur :
+```
+http://localhost:4200
+```
+
+## 🎯 Fonctionnalités
+
+### ✅ Implémentées
+
+- [x] Affichage de la liste des suggestions
+- [x] Système de likes avec compteur
+- [x] Ajout aux favoris
+- [x] Filtrage par titre et catégorie
+- [x] Affichage des statuts (Acceptée, Refusée, En attente)
+- [x] Interface responsive
+- [x] Header et Footer personnalisés
+
+
+
+## 📂 Structure du projet
+```
+projecttp/
+├── src/
+│   ├── app/
+│   │   ├── core/
+│   │   │   ├── header/
+│   │   │   ├── footer/
+│   │   │   └── list-suggestion/
+│   │   ├── models/
+│   │   │   └── suggestion.ts
+│   │   ├── app.component.ts
+│   │   └── app.component.html
+│   └── ...
+├── package.json
+└── README.md
+```
+
+
+## 👨‍💻 Auteur
+
+**sarrastambouli**
+- GitHub: [@sarrastambouli](https://github.com/sarrastambouli)
+
+## 📄 Licence
+
+Ce projet a été réalisé dans le cadre d'un workshop universitaire (2025-2026).
+
+## 🙏 Remerciements
+
+Projet réalisé dans le cadre du Workshop n°2 - Manipulation des Composants Angular.
