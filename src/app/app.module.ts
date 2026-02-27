@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { provideHttpClient } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,7 +23,7 @@ import { NotfoundComponent } from './core/notfound/notfound.component';
     AppRoutingModule,
     FormsModule
   ],
-  providers: [],
+  providers: [provideHttpClient()],  // ← AJOUTÉ ICI
   bootstrap: [AppComponent]
 })
 export class AppModule { }

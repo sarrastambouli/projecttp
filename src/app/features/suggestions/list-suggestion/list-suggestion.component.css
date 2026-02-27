@@ -530,3 +530,13 @@
 .btn-add-suggestion .btn-icon {
   font-size: 1.3rem;
 }
+.btn-delete {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}

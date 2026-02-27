@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Suggestion } from '../../../models/suggestion';
+import { Suggestion } from '../../models/suggestion';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SuggestionService {
+  // URL du backend
   private suggestionUrl = 'http://localhost:3000/suggestions';
 
   constructor(private http: HttpClient) { }

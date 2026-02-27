@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Suggestion } from '../../../models/suggestion';
-import { SuggestionService } from '../services/suggestion.service';
+import { SuggestionService } from '../../../core/services/suggestion.service';
 
 @Component({
   selector: 'app-suggestion-details',
@@ -25,22 +25,40 @@ export class SuggestionDetailsComponent implements OnInit {
     });
   }
 
-  loadSuggestion(): void {
-    const found = this.suggestionService.getSuggestionById(this.suggestionId);
-    if (found) {
-      this.suggestion = found;
-    } else {
-      this.router.navigate(['/404']);
+  // 7. Récupérer les détails d'une suggestion
+loadSuggestion(): void {
+  this.suggestionService.getSuggestionById(this.suggestionId).subscribe({
+    next: (data: any) => {
+      this.suggestion = data.suggestion; 
+    },
+    error: (error) => {
+      console.error('Erreur:', error);
     }
-  }
+  });
+}
 
   backToList(): void {
     this.router.navigate(['/suggestions']);
   }
 
-  likeSuggestion(): void {
-    this.suggestion.nbLikes++;
+  // 13. Naviguer vers le formulaire de modification
+  editSuggestion(): void {
+    this.router.navigate(['/suggestions/edit', this.suggestionId]);
   }
+
+likeSuggestion(): void {
+  const newLikes = this.suggestion.nbLikes + 1;
+  this.suggestion.nbLikes = newLikes; // mise à jour visuelle immédiate
+  this.suggestionService.updateLikes(this.suggestion.id, newLikes).subscribe({
+    next: (data: any) => {
+      console.log('LIKE REÇU:', data);
+    },
+    error: (error) => {
+      console.error('ERREUR LIKE:', error);
+      this.suggestion.nbLikes = newLikes - 1; // rollback
+    }
+  });
+}
 
   getStatusClass(status: string): string {
     switch (status) {
@@ -64,7 +82,8 @@ export class SuggestionDetailsComponent implements OnInit {
       case 'en_attente':
         return 'EN ATTENTE';
       default:
-        return status.toUpperCase();
+        if (!status) return 'Unknown'; // or return '' or whatever default makes sense
+  return status.toUpperCase();
     }
   }
 }

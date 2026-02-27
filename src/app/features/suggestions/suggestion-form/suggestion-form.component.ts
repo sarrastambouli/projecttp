@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { SuggestionService } from '../services/suggestion.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SuggestionService } from '../../../core/services/suggestion.service';
 import { Suggestion } from '../../../models/suggestion';
 
 @Component({
@@ -11,6 +11,8 @@ import { Suggestion } from '../../../models/suggestion';
 })
 export class SuggestionFormComponent implements OnInit {
   suggestionForm!: FormGroup;
+  isEditMode: boolean = false;
+  suggestionId!: number;
   
   categories: string[] = [
     'Infrastructure et bâtiments',
@@ -28,11 +30,21 @@ export class SuggestionFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private suggestionService: SuggestionService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.initForm();
+    
+    // 13. Vérifier si on est en mode édition
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.isEditMode = true;
+        this.suggestionId = +params['id'];
+        this.loadSuggestion();
+      }
+    });
   }
 
   initForm(): void {
@@ -54,6 +66,28 @@ export class SuggestionFormComponent implements OnInit {
     });
   }
 
+  // 13. Charger la suggestion à modifier
+  loadSuggestion(): void {
+    this.suggestionService.getSuggestionById(this.suggestionId).subscribe({
+      next: (data) => {
+        const dateStr = new Date(data.date).toISOString().split('T')[0];
+        
+        this.suggestionForm.patchValue({
+          title: data.title,
+          description: data.description,
+          category: data.category,
+          date: dateStr,
+          status: data.status
+        });
+      },
+      error: (error) => {
+        console.error('Erreur:', error);
+        alert('Erreur lors du chargement.');
+        this.router.navigate(['/suggestions']);
+      }
+    });
+  }
+
   get title() {
     return this.suggestionForm.get('title');
   }
@@ -66,25 +100,46 @@ export class SuggestionFormComponent implements OnInit {
     return this.suggestionForm.get('category');
   }
 
+  // 11 et 14. Soumettre le formulaire (ADD ou UPDATE)
   onSubmit(): void {
     if (this.suggestionForm.valid) {
       const formValue = this.suggestionForm.getRawValue();
       
-      const newSuggestion: Suggestion = {
-        id: 0, // Sera auto-incrémenté par le service
+      const suggestionData: any = {
         title: formValue.title,
         description: formValue.description,
         category: formValue.category,
         date: new Date(formValue.date),
-        status: 'en_attente',
-        nbLikes: 0
+        status: this.isEditMode ? formValue.status : 'en_attente'
       };
 
-      this.suggestionService.addSuggestion(newSuggestion);
-      
-      alert('✅ Suggestion ajoutée avec succès !');
-      
-      this.router.navigate(['/suggestions']);
+      if (this.isEditMode) {
+        // 14. Mode UPDATE
+        this.suggestionService.updateSuggestion(this.suggestionId, suggestionData).subscribe({
+          next: () => {
+            alert('✅ Suggestion modifiée avec succès !');
+            this.router.navigate(['/suggestions']);
+          },
+          error: (error) => {
+            console.error('Erreur:', error);
+            alert('❌ Erreur lors de la modification.');
+          }
+        });
+      } else {
+        // 11. Mode ADD
+        suggestionData.nbLikes = 0;
+        
+        this.suggestionService.addSuggestion(suggestionData).subscribe({
+          next: () => {
+            alert('✅ Suggestion ajoutée avec succès !');
+            this.router.navigate(['/suggestions']);
+          },
+          error: (error) => {
+            console.error('Erreur:', error);
+            alert('❌ Erreur lors de l\'ajout.');
+          }
+        });
+      }
     }
   }
 

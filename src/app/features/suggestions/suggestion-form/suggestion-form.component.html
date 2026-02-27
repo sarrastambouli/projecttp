@@ -1,12 +1,14 @@
 <div class="form-container">
   <div class="form-card">
-    <div class="form-header">
-      <h1 class="form-title">
-        <span class="title-icon">➕</span>
-        Ajouter une nouvelle suggestion
-      </h1>
-      <p class="form-subtitle">Partagez vos idées pour améliorer le campus</p>
-    </div>
+<div class="form-header">
+  <h1 class="form-title">
+    <span class="title-icon">{{ isEditMode ? '✏️' : '➕' }}</span>
+    {{ isEditMode ? 'Modifier la suggestion' : 'Ajouter une nouvelle suggestion' }}
+  </h1>
+  <p class="form-subtitle">
+    {{ isEditMode ? 'Modifiez les informations' : 'Partagez vos idées pour améliorer le campus' }}
+  </p>
+</div>
 
     <form [formGroup]="suggestionForm" (ngSubmit)="onSubmit()">
       
@@ -115,14 +117,14 @@
 
       <!-- Boutons d'action -->
       <div class="form-actions">
-        <button 
-          type="submit" 
-          class="btn btn-submit"
-          [disabled]="suggestionForm.invalid"
-        >
-          <span class="btn-icon">✅</span>
-          <span>Soumettre</span>
-        </button>
+       <button 
+  type="submit" 
+  class="btn btn-submit"
+  [disabled]="suggestionForm.invalid"
+>
+  <span class="btn-icon">{{ isEditMode ? '💾' : '✅' }}</span>
+  <span>{{ isEditMode ? 'Enregistrer' : 'Soumettre' }}</span>
+</button>
 
         <button 
           type="button" 

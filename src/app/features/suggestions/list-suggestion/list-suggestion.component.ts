@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Suggestion } from '../../../models/suggestion';
-import { SuggestionService } from '../services/suggestion.service';
+import { SuggestionService } from '../../../core/services/suggestion.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -24,16 +24,52 @@ export class ListSuggestionComponent implements OnInit {
     this.loadSuggestions();
   }
 
-  loadSuggestions(): void {
-    this.suggestions = this.suggestionService.getSuggestions();
-  }
+  // 5. Récupérer la liste depuis le backend
+loadSuggestions(): void {
+  this.suggestionService.getSuggestionsList().subscribe({
+    next: (data: any) => {
+      this.suggestions = data; // c'est directement un tableau, pas data.suggestions
+    },
+    error: (error) => {
+      console.error('Erreur:', error);
+    }
+  });
+}
+
+likeSuggestion(suggestion: Suggestion): void {
+  const newLikes = suggestion.nbLikes + 1;
+  suggestion.nbLikes = newLikes; // mise à jour visuelle immédiate
+  this.suggestionService.updateLikes(suggestion.id, newLikes).subscribe({
+    next: (data: any) => {
+      console.log('LIKE REÇU:', data);
+    },
+    error: (error) => {
+      console.error('ERREUR LIKE:', error);
+      suggestion.nbLikes = newLikes - 1; // rollback
+    }
+  });
+}
 
   navigateToAddForm(): void {
     this.router.navigate(['/suggestions/add']);
   }
 
-  likeSuggestion(suggestion: Suggestion): void {
-    suggestion.nbLikes++;
+
+
+  // 9. Supprimer une suggestion
+  deleteSuggestion(suggestion: Suggestion): void {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer "${suggestion.title}" ?`)) {
+      this.suggestionService.deleteSuggestion(suggestion.id).subscribe({
+        next: () => {
+          alert('✅ Suggestion supprimée avec succès !');
+          this.loadSuggestions(); // Recharger la liste
+        },
+        error: (error) => {
+          console.error('Erreur lors de la suppression:', error);
+          alert('❌ Erreur lors de la suppression.');
+        }
+      });
+    }
   }
 
   addToFavorites(suggestion: Suggestion): void {
